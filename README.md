@@ -1,4 +1,7 @@
 # tseting
+## Play My Rocket Game
+
+[Play the game](https://yourusername.github.io/rocket-game/)
 
 ## 🐦 My Recent Tweets
 
