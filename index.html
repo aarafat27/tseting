@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Game</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { background: #000; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let rocket = {
+            x: canvas.width / 2,
+            y: canvas.height - 30,
+            width: 50,
+            height: 50,
+            speed: 5
+        };
+
+        let obstacles = [];
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+
+        function drawRocket() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(rocket.x, rocket.y, rocket.width, rocket.height);
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = 'red';
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function updateObstacles() {
+            if (Math.random() < 0.01) {
+                obstacles.push({
+                    x: Math.random() * canvas.width,
+                    y: -50,
+                    width: 50,
+                    height: 50,
+                    speed: 3 + Math.random() * 2
+                });
+            }
+            obstacles.forEach(obstacle => {
+                obstacle.y += obstacle.speed;
+            });
+            obstacles = obstacles.filter(obstacle => obstacle.y < canvas.height);
+        }
+
+        function checkCollisions() {
+            obstacles.forEach(obstacle => {
+                if (rocket.x < obstacle.x + obstacle.width &&
+                    rocket.x + rocket.width > obstacle.x &&
+                    rocket.y < obstacle.y + obstacle.height &&
+                    rocket.y + rocket.height > obstacle.y) {
+                    resetGame();
+                }
+            });
+        }
+
+        function resetGame() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+            }
+            score = 0;
+            obstacles = [];
+            rocket.x = canvas.width / 2;
+            rocket.y = canvas.height - 30;
+        }
+
+        function updateGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawRocket();
+            drawObstacles();
+            updateObstacles();
+            checkCollisions();
+            score++;
+            requestAnimationFrame(updateGame);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && rocket.x > 0) {
+                rocket.x -= rocket.speed;
+            }
+            if (e.key === 'ArrowRight' && rocket.x < canvas.width - rocket.width) {
+                rocket.x += rocket.speed;
+            }
+            if (e.key === 'ArrowUp' && rocket.y > 0) {
+                rocket.y -= rocket.speed;
+            }
+            if (e.key === 'ArrowDown' && rocket.y < canvas.height - rocket.height) {
+                rocket.y += rocket.speed;
+            }
+        });
+
+        updateGame();
+    </script>
+</body>
+</html>
