@@ -19,10 +19,10 @@
 
         let rocket = {
             x: canvas.width / 2,
-            y: canvas.height - 30,
-            width: 50,
+            y: canvas.height - 60,
+            width: 30,
             height: 50,
-            speed: 5
+            speed: 7
         };
 
         let obstacles = [];
@@ -31,7 +31,12 @@
 
         function drawRocket() {
             ctx.fillStyle = 'white';
-            ctx.fillRect(rocket.x, rocket.y, rocket.width, rocket.height);
+            ctx.beginPath();
+            ctx.moveTo(rocket.x, rocket.y);
+            ctx.lineTo(rocket.x + rocket.width / 2, rocket.y + rocket.height);
+            ctx.lineTo(rocket.x - rocket.width / 2, rocket.y + rocket.height);
+            ctx.closePath();
+            ctx.fill();
         }
 
         function drawObstacles() {
@@ -48,7 +53,7 @@
                     y: -50,
                     width: 50,
                     height: 50,
-                    speed: 3 + Math.random() * 2
+                    speed: 5 + Math.random() * 2
                 });
             }
             obstacles.forEach(obstacle => {
@@ -60,7 +65,7 @@
         function checkCollisions() {
             obstacles.forEach(obstacle => {
                 if (rocket.x < obstacle.x + obstacle.width &&
-                    rocket.x + rocket.width > obstacle.x &&
+                    rocket.x > obstacle.x &&
                     rocket.y < obstacle.y + obstacle.height &&
                     rocket.y + rocket.height > obstacle.y) {
                     resetGame();
@@ -76,7 +81,7 @@
             score = 0;
             obstacles = [];
             rocket.x = canvas.width / 2;
-            rocket.y = canvas.height - 30;
+            rocket.y = canvas.height - 60;
         }
 
         function updateGame() {
@@ -90,10 +95,10 @@
         }
 
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' && rocket.x > 0) {
+            if (e.key === 'ArrowLeft' && rocket.x > rocket.width / 2) {
                 rocket.x -= rocket.speed;
             }
-            if (e.key === 'ArrowRight' && rocket.x < canvas.width - rocket.width) {
+            if (e.key === 'ArrowRight' && rocket.x < canvas.width - rocket.width / 2) {
                 rocket.x += rocket.speed;
             }
             if (e.key === 'ArrowUp' && rocket.y > 0) {
