@@ -1,7 +1,7 @@
 # tseting
 ## Play My Rocket Game
 
-[Play the game]([https://yourusername.github.io/rocket-game/](https://aarafat27.github.io/tseting/))
+[Play the game](https://aarafat27.github.io/tseting/)
 
 ## 🐦 My Recent Tweets
 
